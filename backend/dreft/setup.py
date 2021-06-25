@@ -6,13 +6,7 @@ setup_requires = [
 
 
 install_requires = [
-    'django==3.2.4',
-    'html5lib==1.1',
-    'wheel==0.36.2',
-    'JPype1==1.3.0',
-    'konlpy==0.5.2',
-    'wordcloud==1.8.1'
-
+    'djangorestframework 3.12.4'
     ]
 
 
@@ -34,9 +28,9 @@ setup(
     scripts=['manage.py'],
     entry_points={
         'console_scripts': [
-            'publish = admin.common.script:main',
-            'publish = admin.crime.script:main',
-            'publish = admin.gas_station.script:main',
+            'publish = dreft.common.script:main',
+            'publish = dreft.crime.script:main',
+            'publish = dreft.gas_station.script:main',
             ],
         },
     )
