@@ -14,27 +14,40 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from common.views import Connection
+
 from allauth.account.views import confirm_email
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path, include
+
 # from django.conf.urls import url, include
+from common.views import Connection
+from django.conf.urls import url, include
+from django.urls import path
 from rest_framework import routers
-from member.views import Auth
+
 # from board import views
-router = routers.DefaultRouter()
+# router = routers.DefaultRouter()
 # router.register(r'member', views.MemberViewSet)
 # router.register(r'board', views.BoardViewSet)
+
+
+urlpatterns = [
+    path('connection', Connection.as_view()),
+    #url('^api/post', include('board.urls')),
+    url(r'^api/member/', include('member.urls')), #  프로젝트 urls에 넘어옴 그것을 다시 app에 urls 로 넘겨준다
+    url(r'^adm/member/', include('member.urls')),
+    url(r'^api/post/', include('board.urls')),
+]
+''' CBV
+from common.views import Connection
+from django.urls import path, include
+from rest_framework import routers
+# router = routers.DefaultRouter()
+
 urlpatterns = [
     path('connection', Connection.as_view()),
     path('board', include('board.urls')),
-    # path('member', include('member.urls')),
-    url(r'^member', Auth.as_view()),
-    # path('admin/', admin.site.urls),
-    url(r'^rest-auth/', include('rest_auth.urls')),
-    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
-    url(r'^account/', include('allauth.urls')),
-    url(r'^accounts-rest/registration/accunt-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
+    path('member', include('member.urls')),
 
 ]
+'''

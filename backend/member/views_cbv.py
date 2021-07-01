@@ -1,19 +1,24 @@
+from django.shortcuts import render
+from django.urls import path
+from . import views_cbv
+# Create your views here.
 
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from member.models import MemberVO as Member
-from board.serializers import BoardSerializer
+from member.serializers import MemberSerializers
 from rest_framework.views import APIView
 from icecream import ic
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 
-class Posts(APIView):
+class Members(APIView):
     def post(self, request):
 
         data = request.data['body']
         ic(request)
-        serializer = BoardSerializer(data=data)
+        serializer = MemberSerializers(data=data)
 
         if serializer.is_valid():
             serializer.save()
@@ -22,8 +27,15 @@ class Posts(APIView):
         return Response(serializer.errors,status=400)
 
 class Member(APIView):
-    def get(self, request):
-        pass
+
+    def get(self, request, format = None):
+        data = request.data['body']
+        pk = data['username']
+        user_input_password = data['password']
+        member = self.get_object(pk)
+        if user_input_password == member.password:
+            return Response({'result': 'succese'}, status=201)
+        return HttpResponse(status=104)
 
 @csrf_exempt
 def member_list(request):
@@ -32,16 +44,15 @@ def member_list(request):
     List all code snippets, or create a new snippet.
     """
     if request.method == 'GET':
-        serializer = BoardSerializer()
+        serializer = MemberSerializers()
         if serializer.is_valid():
             serializer.save()
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        serializer = BoardSerializer(data=data)
+        serializer = MemberSerializers(data=data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
-# Create your views here.
