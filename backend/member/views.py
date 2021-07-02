@@ -2,21 +2,20 @@ from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from rest_framework import status
 from member.models import MemberVO
-from member.serializers import MemberSerializers
+
 from rest_framework.decorators import api_view, parser_classes
 from icecream import ic
 from member.serializers import MemberSerializers
-
+# FBV
 @api_view(['GET', 'POST', 'DELETE'])
 @parser_classes([JSONParser])
 def members(request):
-    print('=== 여기까지는 왔다 !! ')
     if request.method == 'GET':
         all_members = MemberVO.objects.all()
         serializer = MemberSerializers(all_members, many=True)
-        return JsonResponse(data=serializer.data, safe=False)
+        return JsonResponse(data=serializer.data, safe=False)  #  여기에 들어간다. return이 있는 함수 export const memberList = () => axios.get(`${SERVER}adm/member/list`)
     elif request.method == 'POST':
-        new_member = request.data['body']
+        new_member = request.data['body']  # body에 있는 데이터를 뽑아 저장해준다.
         ic(new_member)
         serializer = MemberSerializers(data = new_member)
         if serializer.is_valid():
